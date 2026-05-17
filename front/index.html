@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de Estoque Hospitalar Pro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .container {
+            background-color: white;
+            flex: 1;
+            min-width: 320px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .caixa-bipe {
+            background-color: #e3f2fd;
+            border: 2px dashed #007bff;
+        }
+
+        .caixa-entrada {
+            background-color: #e8f5e9;
+            border: 2px dashed #2e7d32;
+        }
+
+        .caixa-cadastro {
+            background-color: #fff3e0;
+            border: 2px dashed #e65100;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 16px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .input-bipe {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #007bff !important;
+        }
+
+        .input-cadastro-bipe {
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid #e65100 !important;
+        }
+
+        button {
+            width: 100%;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .btn-entrada {
+            background-color: #2e7d32;
+        }
+
+        .btn-entrada:hover {
+            background-color: #1b5e20;
+        }
+
+        .btn-cadastro {
+            background-color: #e65100;
+        }
+
+        .btn-cadastro:hover {
+            background-color: #b53d00;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .alerta {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Controle de Estoque - Engenharia Clínica H9J</h1>
+
+    <div class="grid">
+        <div class="container caixa-bipe">
+            <h2 style="color: #0056b3; margin-top: 0; text-align: center;">Saída</h2>
+            <p style="text-align: center;">Passe o leitor para dar BAIXA de 1 unidade:</p>
+            <input type="text" id="campoBipe" class="input-bipe" placeholder="BIPE O CÓDIGO AQUI" autofocus>
+            <div id="msgSaida" class="alerta"></div>
+        </div>
+
+        <div class="container caixa-entrada">
+            <h2 style="color: #2e7d32; margin-top: 0; text-align: center;">Entrada</h2>
+            <p style="text-align: center;">Adicione mais unidades a um item que já existe:</p>
+            <label><b>Código:</b></label>
+            <input type="text" id="insereCodigo" placeholder="Ex: QR-001">
+            <label><b>Quantidade:</b></label>
+            <input type="number" id="insereQtd" value="1" min="1">
+            <button class="btn-entrada" onclick="enviarEntrada()">Adicionar ao Estoque</button>
+            <div id="msgEntrada" class="alerta"></div>
+        </div>
+
+        <div class="container caixa-cadastro">
+            <h2 style="color: #e65100; margin-top: 0; text-align: center;">Cadastrar Novo Item</h2>
+            <p style="text-align: center;">Bipe o código inédito e escolha as opções:</p>
+
+            <label><b>Código QR (Bipe aqui):</b></label>
+            <input type="text" id="cadastraCodigo" class="input-cadastro-bipe" placeholder="Passe o leitor aqui">
+
+            <label><b>Nome/Tipo Padrão:</b></label>
+            <select id="cadastraTipo">
+                <option value="">-- Selecione o Tipo --</option>
+                <option value="Cabo de ECG">Cabo de ECG</option>
+                <option value="Cabo de Oximetria">Cabo de Oximetria</option>
+                <option value="Cabo de PNI">Cabo de PNI</option>
+                <option value="Manguito">Manguito</option>
+            </select>
+
+            <label><b>Padrão de Conexão:</b></label>
+            <select id="cadastraMarca">
+                <option value="">-- Selecione o Padrão --</option>
+                <option value="Padrão Philips">Padrão Philips</option>
+                <option value="Padrão Mindray">Padrão Mindray</option>
+                <option value="Padrão Nihon">Padrão Nihon</option>
+                <option value="Padrão Welch Allyn">Padrão Welch Allyn</option>
+            </select>
+
+            <label><b>Especificação (Opcional):</b></label>
+            <select id="cadastraEspec">
+                <option value="">-- Nenhuma / Padrão --</option>
+                <option value="3 Vias Adulto">03 Vias Adulto</option>
+                <option value="5 Vias Adulto">05 Vias Adulto</option>
+                <option value="3 Vias Infantil">03 Vias Infantil</option>
+                <option value="5 Vias Infantil">05 Vias Infantil</option>
+                <option value="Adulto">Adulto (Manguito/Oximetria)</option>
+                <option value="Infantil">Infantil (Manguito/Oximetria)</option>
+                <option value="Obeso">Obeso (Manguito)</option>
+                <option value="Neonatal">Neonatal</option>
+            </select>
+
+            <label><b>Quantidade Inicial:</b></label>
+            <input type="number" id="cadastraQtd" value="0" min="0">
+
+            <button class="btn-cadastro" onclick="enviarCadastro()">Cadastrar Item</button>
+            <div id="msgCadastro" class="alerta"></div>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 1200px; margin: 30px auto;">
+        <h2>Estoque Real no Banco de Dados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Código QR</th>
+                    <th>Nome Padronizado de Fábrica</th>
+                    <th>Quantidade Disponível</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaCorpo">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function atualizarTabela() {
+            fetch('http://127.0.0.1:5000/estoque')
+                .then(res => res.json())
+                .then(produtos => {
+                    let tabela = document.getElementById('tabelaCorpo');
+                    tabela.innerHTML = "";
+                    if (produtos.length === 0) {
+                        tabela.innerHTML = "<tr><td colspan='3' style='text-align:center; color:#999;'>Nenhum item cadastrado ainda. Banco vazio!</td></tr>";
+                        return;
+                    }
+                    produtos.forEach(item => {
+                        tabela.innerHTML += `
+                        <tr>
+                            <td><b>${item.codigo_qr}</b></td>
+                            <td>${item.nome}</td>
+                            <td><b>${item.quantidade} un</b></td>
+                        </tr>
+                    `;
+                    });
+                });
+        }
+
+        window.onload = atualizarTabela;
+
+        document.getElementById('campoBipe').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                let codigo = this.value;
+                let msg = document.getElementById('msgSaida');
+                if (codigo) {
+                    fetch('http://127.0.0.1:5000/baixa', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ codigo: codigo })
+                    })
+                        .then(res => res.json())
+                        .then(dados => {
+                            msg.style.display = "block";
+                            if (dados.status === "sucesso" || !dados.status) {
+                                msg.innerText = dados.mensagem ? `Baixa: ${dados.nome} - ${dados.mensagem}` : `Baixa efetuada!`;
+                                msg.style.backgroundColor = "#d4edda"; msg.style.color = "#155724";
+                                atualizarTabela();
+                            } else {
+                                msg.innerText = dados.mensagem;
+                                msg.style.backgroundColor = "#f8d7da"; msg.style.color = "#721c24";
+                            }
+                        }).catch(err => {
+                            msg.style.display = "block";
+                            msg.innerText = "Erro ao conectar com o servidor.";
+                            msg.style.backgroundColor = "#f8d7da"; msg.style.color = "#721c24";
+                        });
+                    this.value = '';
+                }
+            }
+        });
+
+        function enviarEntrada() {
+            let codigo = document.getElementById('insereCodigo').value;
+            let qtd = document.getElementById('insereQtd').value;
+            let msg = document.getElementById('msgEntrada');
+
+            if (!codigo || !qtd) { alert('Preencha os campos de entrada!'); return; }
+
+            fetch('http://127.0.0.1:5000/entrada', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ codigo: codigo, quantidade: qtd })
+            })
+                .then(res => res.json())
+                .then(dados => {
+                    msg.style.display = "block";
+                    if (dados.status === "sucesso") {
+                        msg.innerText = `Abastecido: ${dados.nome} (+${qtd})`;
+                        msg.style.backgroundColor = "#d4edda"; msg.style.color = "#155724";
+                        atualizarTabela();
+                        document.getElementById('insereCodigo').value = '';
+                        document.getElementById('insereQtd').value = '1';
+                    } else {
+                        msg.innerText = dados.mensagem;
+                        msg.style.backgroundColor = "#f8d7da"; msg.style.color = "#721c24";
+                    }
+                });
+        }
+
+        function enviarCadastro() {
+            let codigo = document.getElementById('cadastraCodigo').value;
+            let tipo = document.getElementById('cadastraTipo').value;
+            let marca = document.getElementById('cadastraMarca').value;
+            let espec = document.getElementById('cadastraEspec').value;
+            let qtd = document.getElementById('cadastraQtd').value;
+            let msg = document.getElementById('msgCadastro');
+
+            if (!codigo || !tipo || !marca) {
+                alert('O código QR, o Tipo Oficial e o Padrão são obrigatórios!');
+                return;
+            }
+
+            fetch('http://127.0.0.1:5000/cadastrar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    codigo: codigo,
+                    tipo: tipo,
+                    marca: marca,
+                    especificacao: espec,
+                    quantidade: qtd
+                })
+            })
+                .then(res => res.json())
+                .then(dados => {
+                    msg.style.display = "block";
+                    if (dados.status === "sucesso") {
+                        msg.innerText = dados.mensagem;
+                        msg.style.backgroundColor = "#d4edda"; msg.style.color = "#155724";
+
+                        atualizarTabela();
+
+                        document.getElementById('cadastraCodigo').value = '';
+                        document.getElementById('cadastraTipo').value = '';
+                        document.getElementById('cadastraMarca').value = '';
+                        document.getElementById('cadastraEspec').value = '';
+                        document.getElementById('cadastraQtd').value = '0';
+                    } else {
+                        msg.innerText = dados.mensagem;
+                        msg.style.backgroundColor = "#f8d7da"; msg.style.color = "#721c24";
+                    }
+                }).catch(err => {
+                    msg.style.display = "block";
+                    msg.innerText = "Erro na requisição. Verifique o console.";
+                    msg.style.backgroundColor = "#f8d7da"; msg.style.color = "#721c24";
+                });
+        }
+    </script>
+</body>
+
+</html>
