@@ -30,7 +30,7 @@ PASSO 1: PREPARAR O BANCO DE DADOS (SÓ PRECISA FAZER UMA VEZ)
    Uma bolinha verde com um check (de sucesso) deve aparecer embaixo.
 
 -------------------------------------------------------------------
-PASSO 2: LIGAR O BACK-END (O MOTOR DO SISTEMA)
+PASSO 2: LIGAR O BACK-END
 -------------------------------------------------------------------
 1. Abra o seu editor de código (como o Google Antigravity) ou o terminal do Windows.
 2. Navegue até a pasta onde está o arquivo 'servidor.py' usando o comando:
@@ -42,7 +42,7 @@ PASSO 2: LIGAR O BACK-END (O MOTOR DO SISTEMA)
 5. Mantenha essa janela aberta. O motor precisa ficar ligado o tempo todo.
 
 -------------------------------------------------------------------
-PASSO 3: LIGAR O FRONT-END (A TELA VISUAL)
+PASSO 3: LIGAR O FRONT-END
 -------------------------------------------------------------------
 1. Abra um NOVO terminal (clicando no botão "+" do terminal no Antigravity 
    ou abrindo outra janela do Windows).
