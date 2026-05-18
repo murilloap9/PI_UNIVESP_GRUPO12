@@ -32,11 +32,11 @@ PASSO 1: PREPARAR O BANCO DE DADOS (SÓ PRECISA FAZER UMA VEZ)
 -------------------------------------------------------------------
 PASSO 2: LIGAR O BACK-END
 -------------------------------------------------------------------
-1. Abra o seu editor de código (como o Google Antigravity) ou o terminal do Windows.
+1. Abra o seu editor de código ou o terminal do Windows.
 2. Navegue até a pasta onde está o arquivo 'servidor.py' usando o comando:
    cd caminho/da/sua/pasta/back
 3. Abra o arquivo 'servidor.py' e confira se a sua senha do banco de dados 
-   está certinha na linha 15 (ex: password="123456"). Salve o arquivo.
+   está certinha. Salve o arquivo.
 4. No terminal, digite o seguinte comando para ligar o motor:
    python servidor.py
 5. Mantenha essa janela aberta. O motor precisa ficar ligado o tempo todo.
@@ -44,8 +44,7 @@ PASSO 2: LIGAR O BACK-END
 -------------------------------------------------------------------
 PASSO 3: LIGAR O FRONT-END
 -------------------------------------------------------------------
-1. Abra um NOVO terminal (clicando no botão "+" do terminal no Antigravity 
-   ou abrindo outra janela do Windows).
+1. Abra um NOVO terminal.
 2. Navegue até a pasta onde está a sua tela 'index.html' usando o comando:
    cd caminho/da/sua/pasta/front
 3. Digite o comando abaixo para fazer a tela funcionar como um site real:
@@ -55,14 +54,14 @@ PASSO 3: LIGAR O FRONT-END
 -------------------------------------------------------------------
 PASSO 4: USAR O SISTEMA NO NAVEGADOR
 -------------------------------------------------------------------
-1. Abra o seu navegador de internet (Chrome, Edge ou de sua preferência).
+1. Abra o seu navegador de internet (de sua preferência).
 2. Na barra de endereços lá em cima, digite exatamente isto e dê Enter:
    http://localhost:8000
 3. Pronto! O sistema vai abrir limpinho e totalmente integrado com o leitor 
    de código QR e com o banco de dados.
 
 -------------------------------------------------------------------
-DICA PARA FECHAR O PROGRAMA:
+PARA FECHAR O PROGRAMA:
 -------------------------------------------------------------------
 Quando terminar de usar, basta ir nos dois terminais pretos e apertar 
 as teclas 'Ctrl + C' no teclado. Isso desliga os servidores com segurança.
