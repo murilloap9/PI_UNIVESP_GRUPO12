@@ -4,7 +4,7 @@ import mysql.connector
 
 app = Flask(__name__)
 
-# Liberação de CORS para aceitar conexões locais de arquivos (file://)
+
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 def conectar_banco():
@@ -15,7 +15,7 @@ def conectar_banco():
         database="estoque_hospitalar"
     )
 
-# Força os cabeçalhos de liberação em todas as respostas do servidor
+
 @app.after_request
 def add_cors_headers(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -23,7 +23,7 @@ def add_cors_headers(response):
     response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
     return response
 
-# Rota para listar o estoque real
+
 @app.route('/estoque', methods=['GET'])
 def listar_estoque():
     conexao = conectar_banco()
@@ -53,7 +53,7 @@ def dar_baixa():
         
     nome_produto = produto[0]
     
-    # COMANDO CORRIGIDO: quantidade = quantidade - 1
+
     ordem = "UPDATE acessorios SET quantidade = quantidade - 1 WHERE codigo_qr = %s AND quantidade > 0"
     mensageiro.execute(ordem, (codigo_lido,))
     conexao.commit()
@@ -67,7 +67,7 @@ def dar_baixa():
     else:
         return jsonify({"status": "erro", "mensagem": f"{nome_produto} está com estoque zerado!"}), 400
 
-# Rota para dar Entrada (Soma itens existentes)
+
 @app.route('/entrada', methods=['POST'])
 def dar_entrada():
     dados = request.get_json()
@@ -95,7 +95,7 @@ def dar_entrada():
     conexao.close()
     return jsonify({"status": "sucesso", "nome": nome_produto, "mensagem": f"{qtd_nova} unidades adicionadas!"}), 200
 
-# Rota de Cadastro Padronizado
+
 @app.route('/cadastrar', methods=['POST'])
 def cadastrar_produto():
     dados = request.get_json()
@@ -105,7 +105,7 @@ def cadastrar_produto():
     especificacao = dados.get('especificacao')
     qtd_inicial = int(dados.get('quantidade', 0))
     
-    # Monta o nome seguindo o padrão oficial da Engenharia Clínica
+
     nome_padronizado = f"{tipo.upper()} {marca.upper()}"
     if especificacao:
         nome_padronizado += f" - {especificacao.upper()}"
